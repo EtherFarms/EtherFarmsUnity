@@ -25,7 +25,7 @@ namespace Thirdweb.Unity.Examples
     public class PlaygroundManager : MonoBehaviour
     {
         [field: SerializeField, Header("Wallet Options")]
-        private ulong ActiveChainId = 421614;
+        private ulong ActiveChainId = 11155111;
 
         [field: SerializeField]
         private bool WebglForceMetamaskExtension = false;
@@ -106,11 +106,10 @@ namespace Thirdweb.Unity.Examples
             Log(currentPanel.LogText, $"Connecting...");
 
             var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
-
-            SceneManager.LoadSceneAsync(1);
-
+            var address = await wallet.GetAddress();
+            PlayerPrefs.SetString("wallet_address", address);
             // Initialize the wallet panel
-
+            SceneManager.LoadSceneAsync(1);
             //CloseAllPanels();
 
             //// Setup actions
@@ -130,6 +129,7 @@ namespace Thirdweb.Unity.Examples
             //    var address = await wallet.GetAddress();
             //    address.CopyToClipboard();
             //    Log(currentPanel.LogText, $"Address: {address}");
+            //    PlayerPrefs.SetString("wallet_address", address);
             //});
 
             //currentPanel.Action2Button.onClick.RemoveAllListeners();
@@ -147,7 +147,7 @@ namespace Thirdweb.Unity.Examples
             //    var balance = await wallet.GetBalance(chainId: ActiveChainId);
             //    var balanceEth = Utils.ToEth(wei: balance.ToString(), decimalsToDisplay: 4, addCommas: true);
             //    Log(currentPanel.LogText, $"Balance: {balanceEth} {_chainDetails.NativeCurrency.Symbol}");
-            //});
+            //});   
         }
 
         private WalletOptions GetWalletOptions(WalletProvider provider)

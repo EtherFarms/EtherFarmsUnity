@@ -1,5 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using Thirdweb;
+using TMPro;
+using System.Threading.Tasks;
+using System;
 
 public class UIManager : SingletonMonobehaviour<UIManager>
 {
@@ -13,6 +17,9 @@ public class UIManager : SingletonMonobehaviour<UIManager>
 
     public bool PauseMenuOn { get => _pauseMenuOn; set => _pauseMenuOn = value; }
 
+    public TextMeshProUGUI textMeshPro;
+    public TextMeshProUGUI textMeshPro2;
+
     protected override void Awake()
     {
         base.Awake();
@@ -20,10 +27,36 @@ public class UIManager : SingletonMonobehaviour<UIManager>
         pauseMenu.SetActive(false);
     }
 
+    private async void Start()
+    {
+        textMeshPro2.text = SliceString(PlayerPrefs.GetString("wallet_address"), 10, 5);
+        textMeshPro.text = SliceString(PlayerPrefs.GetString("wallet_address"), 10, 5);
+    }
+
     // Update is called once per frame
     private void Update()
     {
         PauseMenu();
+        textMeshPro2.text = SliceString(PlayerPrefs.GetString("wallet_address"), 10, 5);
+        textMeshPro.text = SliceString(PlayerPrefs.GetString("wallet_address"), 10, 5);
+    }
+
+    public static string SliceString(string input, int firstChars, int lastChars)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            return "";
+        }
+
+        if (input.Length <= firstChars + lastChars + 3) // +3 for "..."
+        {
+            return input;
+        }
+
+        string firstPart = input.Substring(0, Math.Min(firstChars, input.Length));
+        string lastPart = input.Substring(input.Length - Math.Min(lastChars, input.Length));
+
+        return firstPart + "..." + lastPart;
     }
 
     private void PauseMenu()
